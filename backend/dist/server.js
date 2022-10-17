@@ -72,11 +72,13 @@ var https_1 = require("https");
 var engines = __importStar(require("consolidate"));
 var path_1 = __importDefault(require("path"));
 var morgan_1 = __importDefault(require("morgan"));
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var app = (0, express_1["default"])();
 var APP_PORT = process.env.APP_PORT || 3030;
 var log = (0, debug_1["default"])("app:main");
 var httpLog = (0, debug_1["default"])("app:endpoint");
 var users_1 = __importDefault(require("./helpers/users"));
+app.use((0, cookie_parser_1["default"])(process.env.APP_SECRET));
 app.engine("html", engines.ejs);
 app.set("view engine", "ejs");
 app.set("views", path_1["default"].join(__dirname, "../", "frontend"));
@@ -103,8 +105,8 @@ function run(CUSTOM_APP_PORT, skipAdminAdd) {
                 case 0:
                     if (process.env.LOCAL_HTTPS) {
                         server = (0, https_1.createServer)({
-                            "key": (0, fs_1.readFileSync)(path_1["default"].join(__dirname, "certificates/local/localhost-privkey.pem")),
-                            "cert": (0, fs_1.readFileSync)(path_1["default"].join(__dirname, "certificates/local/localhost-cert.pem")),
+                            "key": (0, fs_1.readFileSync)(path_1["default"].join(__dirname, "..", "certificates/local/localhost-privkey.pem")),
+                            "cert": (0, fs_1.readFileSync)(path_1["default"].join(__dirname, "..", "certificates/local/localhost-cert.pem")),
                             "rejectUnauthorized": false
                         }, app);
                     }
@@ -123,7 +125,6 @@ function run(CUSTOM_APP_PORT, skipAdminAdd) {
                     return [3 /*break*/, 4];
                 case 3:
                     e_1 = _a.sent();
-                    console.log(e_1);
                     log("Default admin already exists.");
                     return [3 /*break*/, 4];
                 case 4:

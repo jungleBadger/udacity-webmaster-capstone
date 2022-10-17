@@ -35,68 +35,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
-exports.validateJWT = exports.parseJWT = void 0;
-var security_1 = require("../../helpers/security");
-var ENV_COOKIE_KEY = "WebDevelopmentCapstoneUdacity-".concat(process.env.APP_ENV);
-function parseJWT(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var token;
-        return __generator(this, function (_a) {
-            // try to grab token from Authorization header
-            if (req.headers.authorization) {
-                token = req.headers.authorization.split(" ")[1];
-                // if token is not available, reject the request
-                if (!token) {
-                    next(new Error(JSON.stringify({
-                        "status": 400,
-                        "message": "Empty token."
-                    })));
-                }
-                // If token is not available through the Authorization header, try grabbing it in the signed cookies header
-            }
-            else if (req.signedCookies[ENV_COOKIE_KEY]) {
-                // Validate existent token
-                token = req.signedCookies[ENV_COOKIE_KEY];
-            }
-            else {
-                next(new Error(JSON.stringify({
-                    "status": 400,
-                    "message": "Token not found - send it through Auth header or signed cookie."
-                })));
-            }
-            if (!token) {
-                next(new Error(JSON.stringify({
-                    "status": 404,
-                    "message": "Token not found."
-                })));
-            }
-            else {
-                res.locals.token = token;
-                return [2 /*return*/, next()];
-            }
-            return [2 /*return*/];
-        });
+var express_1 = require("express");
+var router = (0, express_1.Router)();
+var users_1 = __importDefault(require("../../helpers/users"));
+/**
+ * @swagger
+ * /auth
+ *   get:
+ *     tags: [Auth]
+ *     summary: Validate user credentials and return a JWT.
+ *     security:
+ *      - ApiKeyAuth: []
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Authentication process went through - the JWT string will be returned to the user.
+ *       401:
+ *         description: Invalid credentials.
+ *       500:
+ *         description: Error handler.
+ */
+router.all("/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _b = (_a = res.status(200)).send;
+                return [4 /*yield*/, users_1["default"].authorizeUser(req.query.username || req.body.username, req.query.password || req.body.password)];
+            case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+        }
     });
-}
-exports.parseJWT = parseJWT;
-function validateJWT(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!res.locals.token) {
-                        throw new Error(JSON.stringify({
-                            "status": 404,
-                            "message": "Token not found."
-                        }));
-                    }
-                    return [4 /*yield*/, (0, security_1.validateJWT)(res.locals.token)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/, next()];
-            }
-        });
-    });
-}
-exports.validateJWT = validateJWT;
+}); });
+exports["default"] = router;

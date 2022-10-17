@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -99,6 +110,95 @@ exports["default"] = {
                         }
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
+                }
+            });
+        });
+    },
+    /**
+     * Retrieves a single User object based on a query.
+     * @method retrieveUserInfo
+     * @async
+     * @param {object} query - Query object to fetch User through ID or username.
+     * @param {boolean} [includePassword=false] - Include User's hashed password into the result object.
+     * @param {boolean} [acceptNotFound=false] - Define if the code should emit an error if no entries are found.
+     * @return {Promise<User|null|Error>} Object containing the User object.
+     */
+    "retrieveUserInfo": function (query, includePassword, acceptNotFound) {
+        if (includePassword === void 0) { includePassword = false; }
+        if (acceptNotFound === void 0) { acceptNotFound = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var userObject;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!query || (!query.id && !query.username)) {
+                            throw new Error(JSON.stringify({
+                                "status": 400,
+                                "message": "Invalid query options."
+                            }));
+                        }
+                        return [4 /*yield*/, this.User.findOne({
+                                "attributes": includePassword ? { "exclude": [] } : { "exclude": ["password"] },
+                                "where": query
+                            })];
+                    case 1:
+                        userObject = _a.sent();
+                        if (userObject) {
+                            return [2 /*return*/, userObject.toJSON()];
+                        }
+                        else {
+                            if (!acceptNotFound) {
+                                throw new Error(JSON.stringify({
+                                    "status": 404,
+                                    "message": "User ".concat(query.id || query.username, " not found.")
+                                }));
+                            }
+                            else {
+                                return [2 /*return*/, null];
+                            }
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    },
+    /**
+     * Create a JWT string upon user authentication.
+     * @method authorizeUser
+     * @async
+     * @param {string} username - User's unique name - a sort of nickname.
+     * @param {string} rawPassword - User's raw password - this will be compared against the stored hash.
+     * @return {Promise<String|Error>} JWT string representing the User object and permissions.
+     */
+    "authorizeUser": function (username, rawPassword) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userObject, isPasswordValid;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!username || !rawPassword) {
+                            throw new Error(JSON.stringify({
+                                "status": 400,
+                                "message": "Missing parameters to authorize user."
+                            }));
+                        }
+                        return [4 /*yield*/, this.retrieveUserInfo({
+                                username: username
+                            }, true, false)];
+                    case 1:
+                        userObject = _a.sent();
+                        return [4 /*yield*/, (0, security_1.compareHash)(rawPassword, userObject === null || userObject === void 0 ? void 0 : userObject.password)];
+                    case 2:
+                        isPasswordValid = _a.sent();
+                        if (!isPasswordValid) return [3 /*break*/, 4];
+                        return [4 /*yield*/, (0, security_1.generateJWT)(__assign(__assign({}, userObject), { "password": undefined }), process.env.APP_SECRET, {
+                                "expiresIn": "5 minutes"
+                            })];
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4: throw new Error(JSON.stringify({
+                        "status": 401,
+                        "message": "Incorrect credentials. Modify it, and try again."
+                    }));
                 }
             });
         });

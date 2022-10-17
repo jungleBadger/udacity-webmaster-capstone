@@ -1,6 +1,7 @@
 "use strict";
 
 import routes from "./routes";
+
 import express, {Application} from "express";
 import debug from "debug";
 
@@ -10,6 +11,7 @@ import {createServer as createHTTPSServer, Server as HTTPSServer} from "https";
 import * as engines from "consolidate";
 import path from "path";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 const app: Application = express();
 const APP_PORT: number|string = process.env.APP_PORT || 3030;
@@ -18,7 +20,7 @@ const httpLog: any = debug("app:endpoint");
 
 import users from "./helpers/users";
 
-
+app.use(cookieParser(process.env.APP_SECRET));
 app.engine("html", engines.ejs);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../", "frontend"));
@@ -47,8 +49,8 @@ export async function run (CUSTOM_APP_PORT: number = 0, skipAdminAdd: boolean = 
 	let server: HTTPSServer|HTTPServer;
 	if (process.env.LOCAL_HTTPS) {
 		server = createHTTPSServer({
-			"key": readFileSync(path.join(__dirname, "certificates/local/localhost-privkey.pem")),
-			"cert": readFileSync(path.join(__dirname, "certificates/local/localhost-cert.pem")),
+			"key": readFileSync(path.join(__dirname, "..", "certificates/local/localhost-privkey.pem")),
+			"cert": readFileSync(path.join(__dirname, "..", "certificates/local/localhost-cert.pem")),
 			"rejectUnauthorized": false
 		}, app);
 	} else {
@@ -66,7 +68,6 @@ export async function run (CUSTOM_APP_PORT: number = 0, skipAdminAdd: boolean = 
 			log("Default admin user created.");
 
 		} catch (e) {
-			console.log(e)
 			log("Default admin already exists.");
 		}
 	}

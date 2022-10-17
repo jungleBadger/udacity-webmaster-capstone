@@ -15,10 +15,10 @@ export async function parseJWT(req: any, res: any, next: any) {
 
 		// if token is not available, reject the request
 		if (!token) {
-			throw new Error(JSON.stringify({
+			next(new Error(JSON.stringify({
 				"status": 400,
 				"message": "Empty token."
-			}));
+			})));
 		}
 
 		// If token is not available through the Authorization header, try grabbing it in the signed cookies header
@@ -28,18 +28,18 @@ export async function parseJWT(req: any, res: any, next: any) {
 		token = req.signedCookies[ENV_COOKIE_KEY];
 	} else {
 
-		throw new Error(JSON.stringify({
+		next(new Error(JSON.stringify({
 			"status": 400,
 			"message": "Token not found - send it through Auth header or signed cookie."
-		}));
+		})));
 	}
 
 	if (!token) {
-		throw new Error(JSON.stringify({
+		next(new Error(JSON.stringify({
 			"status": 404,
 			"message": "Token not found."
 
-		}));
+		})));
 	} else {
 		res.locals.token = token;
 		return next();

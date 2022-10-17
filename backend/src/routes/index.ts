@@ -2,13 +2,14 @@
 
 import {Application, NextFunction, Request, Response} from "express";
 
-// import authHandler from "./partials/authHandler";
+import {parseJWT, validateJWT} from "./middlewares/auth";
+import authHandler from "./partials/auth";
 import usersHandler from "./partials/user";
 
 export default function (app: Application) {
 
-	// app.use("/auth", authHandler);
-	app.use("/api/users", usersHandler);
+	app.use("/auth", authHandler);
+	app.use("/api/users", parseJWT, validateJWT, usersHandler);
 
 	app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 		try {

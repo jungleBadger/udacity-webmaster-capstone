@@ -41,7 +41,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var express_1 = require("express");
 var users_1 = __importDefault(require("../../helpers/users"));
-var auth_1 = require("../middlewares/auth");
 var router = (0, express_1.Router)();
 /**
  * @swagger
@@ -84,7 +83,7 @@ var router = (0, express_1.Router)();
  *       500:
  *         description: Error handler.
  */
-router.post("/create", auth_1.parseJWT, auth_1.validateJWT, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/create", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -122,47 +121,48 @@ router.post("/create", auth_1.parseJWT, auth_1.validateJWT, function (req, res) 
 // 		return res.status(200).send(await users.retrieveAllUsersInfo());
 // 	}
 // );
-//
-// /**
-//  * @swagger
-//  * /api/users/:userId
-//  *   get:
-//  *     tags: [Users]
-//  *     summary: Display information about a specific user.
-//  *     security:
-//  *      - bearerAuth: []
-//  *     produces:
-//  *       - application/json
-//  *     parameters:
-//  *      - name: userId
-//  *        in: path
-//  *        required: true
-//  *        description: The User's ID.
-//  *        schema:
-//  *          type: string
-//  *     responses:
-//  *       200:
-//  *         description: An object representing the user's metadata.
-//  *       401:
-//  *         description: Invalid API token.
-//  *       403:
-//  *         description: Expired or denied API token.
-//  *       404:
-//  *         description: User not found.
-//  *       500:
-//  *         description: Error handler.
-//  */
-// router.get("/:userId",
-// 	parseJWT,
-// 	validateJWT,
-// 	async (req: Request, res: Response) => {
-// 		return res.status(200).send(
-// 			await users.retrieveUserInfo({
-// 				"id": Number(req.params.userId)
-// 			})
-// 		);
-// 	}
-// );
+/**
+ * @swagger
+ * /api/users/:userId
+ *   get:
+ *     tags: [Users]
+ *     summary: Display information about a specific user.
+ *     security:
+ *      - bearerAuth: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        required: true
+ *        description: The User's ID.
+ *        schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: An object representing the user's metadata.
+ *       401:
+ *         description: Invalid API token.
+ *       403:
+ *         description: Expired or denied API token.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Error handler.
+ */
+router.get("/:userId", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _b = (_a = res.status(200)).send;
+                return [4 /*yield*/, users_1["default"].retrieveUserInfo({
+                        "id": Number(req.params.userId)
+                    })];
+            case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+        }
+    });
+}); });
 //
 //
 // /**
