@@ -1,5 +1,6 @@
 import React from 'react';
 import { Counter } from './features/counter/Counter';
+import LoginPage from "./views/LoginPage";
 import './App.css';
 
 import {
@@ -20,7 +21,7 @@ function App() {
 					<nav>
 						<ul>
 							<li>
-								<Link to="/">Home</Link>
+								<Link to="/">Login</Link>
 							</li>
 							<li>
 								<Link to="/about">About</Link>
@@ -39,7 +40,7 @@ function App() {
 
 						<Route path="/users" element={<Users />} />
 
-						<Route path="/" element={<Home />} />
+						<Route path="/" element={<LoginPage />} />
 					</Routes>
 				</main>
 
@@ -49,16 +50,12 @@ function App() {
 	);
 }
 
-function Home() {
-	return <Counter />;
-}
-
 function About() {
 	return <h2>About</h2>;
 }
 
 function Users() {
-	return <h2>Users</h2>;
+	return <Counter />;
 }
 
 

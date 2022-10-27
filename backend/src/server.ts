@@ -11,6 +11,7 @@ import {createServer as createHTTPSServer, Server as HTTPSServer} from "https";
 import * as engines from "consolidate";
 import path from "path";
 import morgan from "morgan";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app: Application = express();
@@ -20,6 +21,7 @@ const httpLog: any = debug("app:endpoint");
 
 import users from "./helpers/users";
 
+app.use(cors());
 app.use(cookieParser(process.env.APP_SECRET));
 app.engine("html", engines.ejs);
 app.set("view engine", "ejs");
