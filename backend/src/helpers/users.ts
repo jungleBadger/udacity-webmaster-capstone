@@ -1,6 +1,6 @@
 
 import {TABLE_REFERENCE, User, userModel} from "../models/User";
-import { generateHash, compareHash, generateJWT } from "./security";
+import { generateHash, compareHash, generateJWT, validateJWT } from "./security";
 
 import Database from "./Database";
 import sequelizeTableConfig from "../configs/sequelizeTableConfig";
@@ -103,6 +103,38 @@ export default {
 				return null;
 			}
 		}
+	},
+
+	/**
+	 * Create a JWT string upon user authentication.
+	 * @method generateJWT
+	 * @async
+	 * @param {string} jwt - User's unique name - a sort of nickname.
+	 * @return {Promise<String|Error>} JWT string representing the User object and permissions.
+	 */
+	"refreshJWT": async function(
+		jwt: string
+	): Promise<string|Error> {
+
+		let decodedJWT: any = await validateJWT(jwt, process.env.APP_SECRET)
+
+		const userObject: any = await this.retrieveUserInfo(
+			{
+				username: decodedJWT.username
+			},
+			false,
+			false
+		) as User;
+
+		return await generateJWT(
+			{
+				...userObject
+			},
+			process.env.APP_SECRET,
+			{
+				"expiresIn": "5 minutes"
+			}
+		);
 	},
 
 	/**

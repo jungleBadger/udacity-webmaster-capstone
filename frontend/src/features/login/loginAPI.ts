@@ -2,6 +2,10 @@
 
 import AuthService from "../../services/auth-service";
 
-export function login(username: string, password: string) {
-	return AuthService.login(username, password)
+export async function login(username: string, password: string): Promise<string> {
+	return (await AuthService.login(username, password)).data
+}
+
+export async function refreshJWT(jwt: string): Promise<string> {
+	return (await AuthService.refreshJWT(jwt)).data
 }

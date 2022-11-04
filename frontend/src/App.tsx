@@ -1,18 +1,35 @@
 import React from 'react';
 import { Counter } from './features/counter/Counter';
 import LoginPage from "./views/LoginPage";
+import SignupPage from "./views/SignupPage";
 import './App.css';
 
 import {
 	BrowserRouter as Router,
 	Routes,
 	Route,
-	Link
+	Link,
+	Navigate
 } from "react-router-dom";
 
 
 
-function App() {
+
+import {
+	performJWTRefresh, authorized, performLogin, performLogout
+} from './features/login/loginSlice';
+
+import {useAppDispatch, useAppSelector} from "./app/hooks";
+
+
+export function App() {
+
+	const dispatch = useAppDispatch();
+
+
+	const isAuthorized: boolean = useAppSelector(authorized);
+
+
 	return (
 		<div className="App">
 
@@ -20,15 +37,40 @@ function App() {
 				<header>
 					<nav>
 						<ul>
-							<li>
-								<Link to="/">Login</Link>
-							</li>
-							<li>
-								<Link to="/about">About</Link>
-							</li>
-							<li>
-								<Link to="/users">Users</Link>
-							</li>
+
+
+
+							{
+								!isAuthorized &&
+								<li>
+									<Link to="/signup">Signup</Link>
+								</li>
+							}
+
+
+							{
+								!isAuthorized &&
+								<li>
+									<Link to="/login">Login</Link>
+								</li>
+							}
+
+
+
+
+							{
+								isAuthorized &&
+								<li>
+									<Link to="/feature">Protected feature</Link>
+								</li>
+							}
+
+							{
+								isAuthorized &&
+								<li onClick={() => dispatch(performLogout())}>
+									<span>Logout</span>
+								</li>
+							}
 						</ul>
 					</nav>
 				</header>
@@ -36,14 +78,32 @@ function App() {
 
 				<main>
 					<Routes>
-						<Route path="/about" element={<About />} />
 
-						<Route path="/users" element={<Users />} />
+						{
+							isAuthorized &&
+							<Route path="/" element={<About />} />
+						}
 
-						<Route path="/" element={<LoginPage />} />
+						{
+							isAuthorized &&
+							<Route path="/feature" element={<Users />} />
+						}
+
+
+						{
+							!isAuthorized &&
+							<Route path="/signup" element={<SignupPage />} />
+						}
+
+						{
+							!isAuthorized &&
+							<Route path="/login" element={<LoginPage />} />
+						}
+
+						<Route path="*" element={<Navigate to={isAuthorized ? "/feature" : "/login"} />} />
+
 					</Routes>
 				</main>
-
 
 			</Router>
 		</div>

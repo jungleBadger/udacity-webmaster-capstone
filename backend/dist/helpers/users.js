@@ -164,6 +164,34 @@ exports["default"] = {
     },
     /**
      * Create a JWT string upon user authentication.
+     * @method generateJWT
+     * @async
+     * @param {string} jwt - User's unique name - a sort of nickname.
+     * @return {Promise<String|Error>} JWT string representing the User object and permissions.
+     */
+    "refreshJWT": function (jwt) {
+        return __awaiter(this, void 0, void 0, function () {
+            var decodedJWT, userObject;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, (0, security_1.validateJWT)(jwt, process.env.APP_SECRET)];
+                    case 1:
+                        decodedJWT = _a.sent();
+                        return [4 /*yield*/, this.retrieveUserInfo({
+                                username: decodedJWT.username
+                            }, false, false)];
+                    case 2:
+                        userObject = _a.sent();
+                        return [4 /*yield*/, (0, security_1.generateJWT)(__assign({}, userObject), process.env.APP_SECRET, {
+                                "expiresIn": "5 minutes"
+                            })];
+                    case 3: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    },
+    /**
+     * Create a JWT string upon user authentication.
      * @method authorizeUser
      * @async
      * @param {string} username - User's unique name - a sort of nickname.

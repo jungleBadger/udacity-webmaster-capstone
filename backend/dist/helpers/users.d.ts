@@ -25,6 +25,14 @@ declare const _default: {
     }, includePassword?: boolean, acceptNotFound?: boolean) => Promise<User | null | Error>;
     /**
      * Create a JWT string upon user authentication.
+     * @method generateJWT
+     * @async
+     * @param {string} jwt - User's unique name - a sort of nickname.
+     * @return {Promise<String|Error>} JWT string representing the User object and permissions.
+     */
+    refreshJWT: (jwt: string) => Promise<string | Error>;
+    /**
+     * Create a JWT string upon user authentication.
      * @method authorizeUser
      * @async
      * @param {string} username - User's unique name - a sort of nickname.

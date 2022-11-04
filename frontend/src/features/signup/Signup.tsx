@@ -2,22 +2,22 @@ import React from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
-	performLogin,
+	performSignup,
 	updateUsername,
 	updatePassword,
 	username as selectUsername,
 	password as selectPassword,
-} from './loginSlice';
-import styles from './Login.module.css';
+} from './signupSlice';
+import styles from './Signup.module.css';
 
-export function Login() {
+export function Signup() {
   const username: string = useAppSelector(selectUsername);
   const password: string = useAppSelector(selectPassword);
   const dispatch = useAppDispatch();
 
   return (
     <div>
-		<h3>LOGIN</h3>
+		<h3>SIGNUP</h3>
 
 		<input
 			aria-label="Username"
@@ -32,7 +32,7 @@ export function Login() {
 		/>
         <button
           className={styles.button}
-          onClick={() => dispatch(performLogin({username, password}))}
+          onClick={() => dispatch(performSignup({username, password}))}
         >
           Login
         </button>

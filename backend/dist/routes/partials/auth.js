@@ -42,6 +42,34 @@ exports.__esModule = true;
 var express_1 = require("express");
 var router = (0, express_1.Router)();
 var users_1 = __importDefault(require("../../helpers/users"));
+var auth_1 = require("../middlewares/auth");
+/**
+ * @swagger
+ * /refresh
+ *   get:
+ *     tags: [Auth]
+ *     summary: Validate user credentials and return a JWT.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Authentication process went through - the JWT string will be returned to the user.
+ *       401:
+ *         description: Invalid credentials.
+ *       500:
+ *         description: Error handler.
+ */
+router.all("/refresh", auth_1.parseJWT, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _b = (_a = res.status(200)).send;
+                return [4 /*yield*/, users_1["default"].refreshJWT(res.locals.token)];
+            case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+        }
+    });
+}); });
 /**
  * @swagger
  * /auth
