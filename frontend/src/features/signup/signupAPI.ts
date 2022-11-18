@@ -3,5 +3,5 @@
 import AuthService from "../../services/auth-service";
 
 export function signup(username: string, password: string) {
-	return AuthService.login(username, password)
+	return AuthService.signup(username, password)
 }

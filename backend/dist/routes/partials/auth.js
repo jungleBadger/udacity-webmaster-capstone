@@ -72,7 +72,7 @@ router.all("/refresh", auth_1.parseJWT, function (req, res) { return __awaiter(v
 }); });
 /**
  * @swagger
- * /auth
+ * /auth/login
  *   get:
  *     tags: [Auth]
  *     summary: Validate user credentials and return a JWT.
@@ -95,6 +95,52 @@ router.all("/login", function (req, res) { return __awaiter(void 0, void 0, void
             case 0:
                 _b = (_a = res.status(200)).send;
                 return [4 /*yield*/, users_1["default"].authorizeUser(req.query.username || req.body.username, req.query.password || req.body.password)];
+            case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+        }
+    });
+}); });
+/**
+ * @swagger
+ * /auth/signup
+ *   get:
+ *     tags: [Auth]
+ *     summary: Creates a new user.
+ *     security:
+ *      - bearerAuth: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *      - name: username
+ *        in: body
+ *        required: true
+ *        description: The User's name.
+ *        schema:
+ *          type: string
+ *      - name: password
+ *        in: body
+ *        required: true
+ *        description: The User's raw password.
+ *        schema:
+ *          type: string
+ *     responses:
+ *       201:
+ *         description: User created.
+ *       401:
+ *         description: Invalid API token.
+ *       403:
+ *         description: Expired or denied API token.
+ *       409:
+ *         description: User already exists.
+ *       500:
+ *         description: Error handler.
+ */
+router.post("/create", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _b = (_a = res.status(201)).send;
+                return [4 /*yield*/, users_1["default"].createUser(req.body.username, req.body.rawPassword || req.body.password)];
             case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
         }
     });

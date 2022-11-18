@@ -16,7 +16,7 @@ export function Login() {
   const dispatch = useAppDispatch();
 
   return (
-    <div>
+    <div className={styles.login}>
 		<h3>LOGIN</h3>
 
 		<input
@@ -32,7 +32,8 @@ export function Login() {
 		/>
         <button
           className={styles.button}
-          onClick={() => dispatch(performLogin({username, password}))}
+		  disabled={!password || !username}
+		  onClick={() => dispatch(performLogin({username, password}))}
         >
           Login
         </button>

@@ -13,6 +13,16 @@ class AuthService {
 		);
 	}
 
+	static async signup(username: string, rawPassword: string): Promise<any> {
+		return await axios.post(
+			`${API_URL}/auth/create`,
+			{
+				"username": username,
+				"password": rawPassword
+			}
+		);
+	}
+
 	static async refreshJWT(jwt: string): Promise<any> {
 		return await axios.get(
 			`${API_URL}/auth/refresh`,

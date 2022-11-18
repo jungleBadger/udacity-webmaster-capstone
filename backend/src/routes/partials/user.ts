@@ -5,58 +5,6 @@ import users from "../../helpers/users";
 
 const router: Router = Router();
 
-/**
- * @swagger
- * /api/users/create:
- *   get:
- *     tags: [Users]
- *     summary: Creates a new user.
- *     security:
- *      - bearerAuth: []
- *     produces:
- *       - application/json
- *     parameters:
- *      - name: firstName
- *        in: body
- *        required: true
- *        description: The User's first name.
- *        schema:
- *          type: string
- *      - name: lastName
- *        in: body
- *        required: true
- *        description: The User's last name.
- *        schema:
- *          type: string
- *      - name: password
- *        in: body
- *        required: true
- *        description: The User's raw password.
- *        schema:
- *          type: string
- *     responses:
- *       201:
- *         description: User created.
- *       401:
- *         description: Invalid API token.
- *       403:
- *         description: Expired or denied API token.
- *       409:
- *         description: User already exists.
- *       500:
- *         description: Error handler.
- */
-router.post("/create",
-	async (req: Request, res: Response) => {
-		return res.status(201).send(
-			await users.createUser(
-				req.body.username,
-				req.body.rawPassword || req.body.password
-			)
-		);
-	}
-);
-
 // /**
 //  * @swagger
 //  * /api/users/

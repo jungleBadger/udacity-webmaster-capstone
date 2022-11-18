@@ -7,7 +7,8 @@ describe('counter reducer', () => {
     value: 3,
     status: 'idle',
 	  username: '',
-	  password: ''
+	  password: '',
+	  confirmPassword: ''
   };
 
   it('should handle initial state', () => {
@@ -15,7 +16,8 @@ describe('counter reducer', () => {
       value: 0,
       status: 'idle',
 		username: '',
-		password: ''
+		password: '',
+		confirmPassword: ''
     });
   });
 

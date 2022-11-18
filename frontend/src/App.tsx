@@ -35,7 +35,7 @@ export function App() {
 
 			<Router>
 				<header>
-					<nav>
+					<nav className="App-header">
 						<ul>
 
 
@@ -76,7 +76,7 @@ export function App() {
 				</header>
 
 
-				<main>
+				<main className={"wrapper"}>
 					<Routes>
 
 						{
